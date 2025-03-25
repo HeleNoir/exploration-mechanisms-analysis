@@ -7,7 +7,7 @@
 #SBATCH --mem=25G
 #SBATCH --output=/data/oc226/%u/output/output-%j.txt
 
-dataset=$1
-algorithm=$2
+algorithm=$1
+dimension=$2
 
-srun nix develop --impure --command python analysis.py -d $dataset -a $algorithm
+srun nix develop --impure --command python analysis.py -a $algorithm -d $dimension
