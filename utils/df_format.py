@@ -15,7 +15,8 @@ config_labels = [
     'Function',
     'Instance',
     'Dimension',
-    'Group'
+    'Group',
+    'PopulationSize'
 ]
 
 config_dict = {
@@ -24,6 +25,7 @@ config_dict = {
     'Instance': 'category',
     'Dimension': 'category',
     'Group': 'category',
+    'PopulationSize': 'int32',
 }
 
 # Labels for logged data
@@ -41,6 +43,72 @@ group3 = ['f010', 'f011', 'f012', 'f013', 'f014']
 group4 = ['f015', 'f016', 'f017', 'f018', 'f019']
 group5 = ['f020', 'f021', 'f022', 'f023', 'f024']
 
+PSO_labels = [
+    'InertiaWeight',
+    'C1',
+    'C2'
+]
+
+SHADE_labels = [
+    'YValue',
+    'PMin',
+    'ArchiveSize',
+    'HistorySize',
+    'FValue',
+    'Crossover'
+]
+
+PSO_RR_labels = [
+    'InertiaWeight',
+    'C1',
+    'C2',
+    'Threshold',
+    'ThresholdParameter'
+]
+
+PSO_GPGM_labels = [
+    'InertiaWeight',
+    'C1',
+    'C2',
+    'Threshold',
+    'ThresholdParameter',
+    'NewPopulationSize',
+    'Mu',
+    'Replacement'
+]
+
+PSO_NPGM_labels = [
+    'InertiaWeight',
+    'C1',
+    'C2',
+    'Threshold',
+    'ThresholdParameter',
+    'NewPopulationSize',
+    'Replacement'
+]
+
+PSO_PDM_labels = [
+    'InertiaWeight',
+    'C1',
+    'C2',
+    'Threshold',
+    'ThresholdParameter',
+    'NewPopulationSize',
+    'ReferenceSolution',
+    'Replacement'
+]
+
+PSO_SRM_labels = [
+    'InertiaWeight',
+    'C1',
+    'C2',
+    'Threshold',
+    'ThresholdParameter',
+    'NewPopulationSize',
+    'ReferenceSolution',
+    'Replacement'
+]
+
 
 def dict_to_df(data_dict, algorithm) -> pd.DataFrame:
     """
@@ -48,7 +116,24 @@ def dict_to_df(data_dict, algorithm) -> pd.DataFrame:
     information into individual columns.
     Labels are specified for exploration-mechanisms
     """
-    labels = ['Config'] + ['Algorithm'] + config_labels + common_labels
+    labels = ['Config'] + ['Algorithm'] + config_labels
+
+    if algorithm == 'PSO':
+        labels += PSO_labels
+    elif algorithm == 'SHADE':
+        labels += SHADE_labels
+    elif algorithm == 'PSO_RR':
+        labels += PSO_RR_labels
+    elif algorithm == 'PSO_GPGM':
+        labels += PSO_GPGM_labels
+    elif algorithm == 'PSO_NPGM':
+        labels += PSO_NPGM_labels
+    elif algorithm == 'PSO_PDM':
+        labels += PSO_PDM_labels
+    elif algorithm == 'PSO_SRM':
+        labels += PSO_SRM_labels
+
+    labels += common_labels
 
     convert_dict = {
         'Config': 'string',
@@ -71,8 +156,61 @@ def dict_to_df(data_dict, algorithm) -> pd.DataFrame:
             entry.append('Group4')
         elif config[2] in group5:
             entry.append('Group5')
+        entry.append(config[5])
         iterations = value['mahf::state::common::Iterations'].tolist()
         corrected_iterations = [iterations[0]] + [i + 1 for i in iterations[1:]]
+        if algorithm == 'PSO':
+            entry.append(config[6])
+            entry.append(config[7])
+            entry.append(config[8].removesuffix(".cbor"))
+        elif algorithm == 'SHADE':
+            entry.append(config[6])
+            entry.append(config[7])
+            entry.append(config[8])
+            entry.append(config[9])
+            entry.append(config[10])
+            entry.append(config[11].removesuffix(".cbor"))
+        elif algorithm == 'PSO_RR':
+            entry.append(config[6])
+            entry.append(config[7])
+            entry.append(config[8])
+            entry.append(config[9])
+            entry.append(config[10].removesuffix(".cbor"))
+        elif algorithm == 'PSO_GPGM':
+            entry.append(config[6])
+            entry.append(config[7])
+            entry.append(config[8])
+            entry.append(config[9])
+            entry.append(config[10])
+            entry.append(config[11])
+            entry.append(config[12])
+            entry.append(config[13].removesuffix(".cbor"))
+        elif algorithm == 'PSO_NPGM':
+            entry.append(config[6])
+            entry.append(config[7])
+            entry.append(config[8])
+            entry.append(config[9])
+            entry.append(config[10])
+            entry.append(config[11])
+            entry.append(config[12].removesuffix(".cbor"))
+        elif algorithm == 'PSO_PDM':
+            entry.append(config[6])
+            entry.append(config[7])
+            entry.append(config[8])
+            entry.append(config[9])
+            entry.append(config[10])
+            entry.append(config[11])
+            entry.append(config[12])
+            entry.append(config[13].removesuffix(".cbor"))
+        elif algorithm == 'PSO_SRM':
+            entry.append(config[6])
+            entry.append(config[7])
+            entry.append(config[8])
+            entry.append(config[9])
+            entry.append(config[10])
+            entry.append(config[11])
+            entry.append(config[12])
+            entry.append(config[13].removesuffix(".cbor"))
         entry.append(corrected_iterations)
         entry.append(value['mahf::state::common::Evaluations'].tolist())
         entry.append(value['BestObjectiveValue'].tolist())

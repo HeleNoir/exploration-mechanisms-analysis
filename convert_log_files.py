@@ -10,14 +10,14 @@ import utils
 
 
 @click.command()
-@click.option('-a', '--algorithm', type=click.STRING, default='RS')
+@click.option('-a', '--algorithm', type=click.STRING, default='PSO')
 @click.option('-d', '--dimension', type=click.STRING, default='d10')
 def main(algorithm: str, dimension: str) -> None:
     base_path = pathlib.Path(__file__).parent
     folder = rf'{algorithm}/{dimension}'
-    log_directory = (pathlib.Path(base_path / '..' / '..' / 'exploration_mechanisms' / 'data' / folder)).resolve()
-    save_directory = (pathlib.Path(base_path / '..' / 'data')).resolve()
-    dataset_directory = (pathlib.Path(base_path / '..' / 'datasets'))
+    log_directory = (pathlib.Path(base_path / '..' / 'exploration-mechanisms' / 'data' / folder)).resolve()
+    save_directory = (pathlib.Path(base_path / 'data')).resolve()
+    dataset_directory = (pathlib.Path(base_path / 'datasets'))
     pathlib.Path.mkdir(save_directory, parents=True, exist_ok=True)
 
     print(__file__)

@@ -54,7 +54,7 @@ def f(x, lb, ub) -> float:
     return 1.0 - (min([max([x, lb]), ub]) - lb) / (ub - lb)
 
 
-def aocc(df, lb: float = 0.00000001, ub: float = 100.0) -> float:
+def aocc(df, lb: float = 0.00000001, ub: float = 100000000.0) -> float:
     """
     Computes the AOCC for the column specified in 'value_column'.
     Adapted from: Vermetten et al. 2024, 'Large-scale Benchmarking of Metaphor-based Optimization Heuristics'

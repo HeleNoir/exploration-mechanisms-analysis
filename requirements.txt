@@ -28,6 +28,7 @@ PyQt5-sip==12.13.0
 python-dateutil==2.9.0.post0
 pytz==2024.1
 scikit-learn==1.5.1
+scikit-posthocs==0.11.3
 scipy==1.13.1
 seaborn==0.13.2
 setuptools==72.1.0

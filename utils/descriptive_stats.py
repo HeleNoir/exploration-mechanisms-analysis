@@ -56,7 +56,7 @@ def summarise_final_stats(df, config_columns, value_columns, additional_columns=
         results.append(row)
 
     if output_name != '':
-        directory_results = save_directory / f'descriptive/{dataset}/'
+        directory_results = save_directory / f'{dataset}/'
         directory = save_directory / 'dataframes/'
         Path.mkdir(directory_results, parents=True, exist_ok=True)
         Path.mkdir(directory, parents=True, exist_ok=True)
