@@ -64,13 +64,11 @@ def main(dimensions: str) -> None:
 
     res = st.friedmanchisquare(*data)
 
-    data_T = data.T
-
     # Compute average ranks of each algorithm
     avg_ranks = results_df.groupby('Function').FinalDistance_mean.rank(pct=True).groupby(results_df.Algorithm).mean()
 
     # Perform Nemenyi post hoc test (pairwise comparison p-values)
-    p_values_matrix = sp.posthoc_nemenyi_friedman(data_T)
+    p_values_matrix = sp.posthoc_nemenyi_friedman(results_df, melted=True, block_col='Function', group_col='Algorithm', y_col='FinalDistance_mean')
     print(p_values_matrix)
 
     results_json = {'Friedman statistic': res[0],
@@ -80,10 +78,9 @@ def main(dimensions: str) -> None:
     with open(experiment_directory / f"comparison_{dimensions}.json", "w") as outfile:
         json.dump(results_json, outfile)
 
-
     # Plot Critical Difference Diagram
     sp.critical_difference_diagram(
-        avg_ranks,  # Average ranks of algorithms TODO change to avg_rank
+        avg_ranks,  # Average ranks of algorithms
         p_values_matrix  # Use the p-values from the Nemenyi test
     )
     plt.savefig(f'{experiment_directory}/crd_{dimensions}', bbox_inches='tight', pad_inches=0)
