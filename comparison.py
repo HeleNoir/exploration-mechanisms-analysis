@@ -68,7 +68,8 @@ def main(dimensions: str) -> None:
     avg_ranks = results_df.groupby('Function').FinalDistance_mean.rank(pct=True).groupby(results_df.Algorithm).mean()
 
     # Perform Nemenyi post hoc test (pairwise comparison p-values)
-    p_values_matrix = sp.posthoc_nemenyi_friedman(results_df, melted=True, block_col='Function', group_col='Algorithm', y_col='FinalDistance_mean')
+    print(results_df.head())
+    p_values_matrix = sp.posthoc_nemenyi_friedman(results_df, melted=True, block_col='Function', block_id_col='Function', group_col='Algorithm', y_col='FinalDistance_mean')
     print(p_values_matrix)
 
     results_json = {'Friedman statistic': res[0],
