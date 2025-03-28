@@ -40,9 +40,9 @@ def main(dimensions: str) -> None:
     function_groups = [y for x, y in process_df.groupby('Function', observed=False)]
     for function_df in function_groups:
         f = function_df['Function'].iloc[0]
-        utils.plot_comparison(function_df, ['PSO', 'PSO_RR'], ['DistanceToOptimum_mean', 'MinimumIndividualDistance_mean'], 'Algorithm',
+        utils.plot_comparison(function_df, ['PSO_RR', 'PSO_GPGM', 'PSO_NPGM', 'PSO_PDM', 'PSO_SRM'], ['DistanceToOptimum_mean', 'MinimumIndividualDistance_mean'], 'Algorithm',
                               f'{f}_comparison_PSO_RR', f'{experiment_directory}')
-        utils.plot_comparison(function_df, ['PSO', 'SHADE'],
+        utils.plot_comparison(function_df, ['SHADE', 'PSO_GPGM', 'PSO_NPGM', 'PSO_PDM', 'PSO_SRM'],
                               ['DistanceToOptimum_mean', 'MinimumIndividualDistance_mean'], 'Algorithm',
                               f'{f}_comparison_SHADE', f'{experiment_directory}')
         utils.plot_comparison(function_df, ['PSO', 'PSO_GPGM', 'PSO_NPGM', 'PSO_PDM', 'PSO_SRM'],
