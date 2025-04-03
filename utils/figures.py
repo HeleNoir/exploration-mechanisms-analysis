@@ -28,7 +28,7 @@ def setup_figs(fig_size: (float, float) = (6.4, 4.8), font_scale: float = 1.6, f
 def setup_figs_descriptive():
     sns.set_theme(style="whitegrid",
                   font="Times New Roman",
-                  font_scale=1,
+                  font_scale=1.2,
                   context='paper',
                   palette='colorblind',
                   rc={
@@ -105,7 +105,7 @@ def plot_descriptive_summarised_lineplots(df, x_col, y_col, std, save):
 
 def plot_twinaxes(df, algorithms, x_col, hue, save):
     setup_figs_descriptive()
-    fig, ax1 = plt.subplots(figsize=(10, 6))
+    fig, ax1 = plt.subplots(figsize=(7, 6))
     ax2 = ax1.twinx()
 
     for algo in algorithms:
@@ -121,9 +121,10 @@ def plot_twinaxes(df, algorithms, x_col, hue, save):
     ax1.set_ylabel("Mean Minimum Individual Distance")
     ax2.set_ylabel("Mean Distance to Optimum")
 
+    ax1.set_yscale("log")
     ax2.set_yscale("log")
 
-    ax1.legend(loc="upper left", bbox_to_anchor=(1.05, 1), title="Algorithm")
+    ax1.legend(loc="upper right", title="Algorithm")
 
     _save_or_show(f'{save}')
 

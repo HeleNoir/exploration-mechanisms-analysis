@@ -105,6 +105,15 @@ def main(algorithm: str, dimension: str) -> None:
                                                                   f'{f}_instances',
                                                                   experiment_directory)
 
+        # Summary statistics of final values, summarised by instance
+        df_instance_stats = utils.summarise_final_stats(function_df,
+                                                        ['Instance'],
+                                                        ['FinalDistance', 'AOCC'],
+                                                        ['Algorithm'],
+                                                        dataset,
+                                                        f'{f}_instances',
+                                                        experiment_directory)
+
         utils.plot_summarised_lineplots(df_instance_process_stats,
                                         value_columns=mean_columns,
                                         hue='Instance',
