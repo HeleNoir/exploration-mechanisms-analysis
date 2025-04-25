@@ -9,13 +9,14 @@ import pandas as pd
 import scipy.stats as st
 import scikit_posthocs as sp
 import matplotlib.pyplot as plt
+import seaborn as sns
 import json
 
 import utils
 
 
 @click.command()
-@click.option('-d', '--dimensions', type=click.STRING, default='d10')
+@click.option('-d', '--dimensions', type=click.STRING, default='d40')
 def main(dimensions: str) -> None:
     base_path = Path(__file__).parent
     save_directory = (Path(base_path / 'data')).resolve()
@@ -45,16 +46,19 @@ def main(dimensions: str) -> None:
 
     instances = ['i01', 'i02', 'i03', 'i04', 'i05']
 
+    colors = {'PSO': 'C0', 'SHADE': 'C1', 'PSO_RR': 'C2', 'PSO_GPGM': 'C3', 'PSO_NPGM': 'C4', 'PSO_PDM': 'C5',
+              'PSO_SRM': 'C6'}
+
     function_groups = [y for x, y in process_df.groupby('Function', observed=False)]
     for function_df in function_groups:
         f_name = function_df['Function'].iloc[0]
-        utils.plot_comparison(function_df, ['PSO_RR', 'PSO_GPGM', 'PSO_NPGM', 'PSO_PDM', 'PSO_SRM'], ['DistanceToOptimum_mean', 'MinimumIndividualDistance_mean'], 'Algorithm',
+        utils.plot_comparison(function_df, ['PSO_RR', 'PSO_GPGM', 'PSO_NPGM', 'PSO_PDM', 'PSO_SRM'], ['DistanceToOptimum_mean', 'MinimumIndividualDistance_mean'], 'Algorithm', colors,
                               f'{f_name}_comparison_PSO_RR', f'{experiment_directory}')
         utils.plot_comparison(function_df, ['SHADE', 'PSO_GPGM', 'PSO_NPGM', 'PSO_PDM', 'PSO_SRM'],
-                              ['DistanceToOptimum_mean', 'MinimumIndividualDistance_mean'], 'Algorithm',
+                              ['DistanceToOptimum_mean', 'MinimumIndividualDistance_mean'], 'Algorithm', colors,
                               f'{f_name}_comparison_SHADE', f'{experiment_directory}')
         utils.plot_comparison(function_df, ['PSO', 'PSO_GPGM', 'PSO_NPGM', 'PSO_PDM', 'PSO_SRM'],
-                              ['DistanceToOptimum_mean', 'MinimumIndividualDistance_mean'], 'Algorithm',
+                              ['DistanceToOptimum_mean', 'MinimumIndividualDistance_mean'], 'Algorithm', colors,
                               f'{f_name}_comparison_PSO_Variants', f'{experiment_directory}')
     del function_groups, process_df
 
@@ -95,12 +99,21 @@ def main(dimensions: str) -> None:
             with open(experiment_directory_crd / f"comparison_{dimensions}_{f}.json", "w") as outfile:
                 json.dump(results_json, outfile)
 
+            # Plot sign_plot
+            plt.figure(figsize=(8, 8), dpi=200)
+            cmap = ["1"] + sns.color_palette("flare", n_colors=4)
+            heatmap_args = {'cmap': cmap, 'linewidths': 0.25, 'linecolor': '0.5', 'clip_on': False, 'square': True}
+            sp.sign_plot(f_p_values_matrix, **heatmap_args)
+            plt.savefig(f'{experiment_directory_crd}/signplot_{dimensions}_{f}', bbox_inches='tight', pad_inches=0)
+            plt.close()
+
             # Plot Critical Difference Diagram
             plt.figure(figsize=(8, 2), dpi=200)
             plt.title(f'Critical difference diagram of average score ranks for {f}')
             sp.critical_difference_diagram(
                 f_avg_ranks,  # Average ranks of algorithms
-                f_p_values_matrix  # Use the p-values from the Nemenyi test
+                f_p_values_matrix,  # Use the p-values from the Nemenyi test
+                color_palette=colors,
             )
             plt.savefig(f'{experiment_directory_crd}/crd_{dimensions}_{f}', bbox_inches='tight', pad_inches=0)
             plt.close()
@@ -132,11 +145,20 @@ def main(dimensions: str) -> None:
     with open(experiment_directory_crd / f"comparison_{dimensions}.json", "w") as outfile:
         json.dump(results_json, outfile)
 
+    # Plot sign_plot
+    plt.figure(figsize=(8, 8), dpi=200)
+    cmap = ["1"] + sns.color_palette("flare", n_colors=4)
+    heatmap_args = {'cmap': cmap, 'linewidths': 0.25, 'linecolor': '0.5', 'clip_on': False, 'square': True}
+    sp.sign_plot(p_values_matrix, **heatmap_args)
+    plt.savefig(f'{experiment_directory_crd}/signplot_{dimensions}', bbox_inches='tight', pad_inches=0)
+    plt.close()
+
     # Plot Critical Difference Diagram
     plt.figure(figsize=(8, 2), dpi=200)
     sp.critical_difference_diagram(
         avg_ranks,  # Average ranks of algorithms
-        p_values_matrix  # Use the p-values from the Nemenyi test
+        p_values_matrix,  # Use the p-values from the Nemenyi test
+        color_palette=colors,
     )
     plt.savefig(f'{experiment_directory_crd}/crd_{dimensions}', bbox_inches='tight', pad_inches=0)
     plt.close()

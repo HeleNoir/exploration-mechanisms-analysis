@@ -65,11 +65,11 @@ def plot_diversity_summarised(df: pd.DataFrame, mean_columns, std_columns, datas
         del df_full
 
 
-def plot_comparison(df: pd.DataFrame, algorithms, value_columns, hue, config_name: str = '', save_directory: str | Path = None):
+def plot_comparison(df: pd.DataFrame, algorithms, value_columns, hue, colors, config_name: str = '', save_directory: str | Path = None):
     if value_columns is None:
         value_columns = ['DistanceToOptimum_mean', 'MinimumIndividualDistance_mean']
     df_full = df[list({'Evaluations', value_columns[0], value_columns[1], hue})]
     df_full = df_full.explode(['Evaluations', value_columns[0], value_columns[1]])
-    utils.plot_twinaxes(df_full, algorithms, 'Evaluations', hue, f'{save_directory}/{config_name}')
+    utils.plot_twinaxes(df_full, algorithms, 'Evaluations', hue, colors, f'{save_directory}/{config_name}')
     del df_full
 

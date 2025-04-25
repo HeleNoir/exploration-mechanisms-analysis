@@ -103,19 +103,21 @@ def plot_descriptive_summarised_lineplots(df, x_col, y_col, std, save):
     _save_or_show(f'{save}_{x_col}_{y_col}')
 
 
-def plot_twinaxes(df, algorithms, x_col, hue, save):
+def plot_twinaxes(df, algorithms, x_col, hue, colors, save):
     setup_figs_descriptive()
     fig, ax1 = plt.subplots(figsize=(7, 6))
     ax2 = ax1.twinx()
 
     for algo in algorithms:
         subset = df[df[hue] == algo]
-        ax1.plot(subset[x_col], subset['MinimumIndividualDistance_mean'], label=algo, linestyle='--', alpha=0.7)
-        ax1.fill_between(subset[x_col].astype(int), subset['MinimumIndividualDistance_mean'].astype(float), alpha=0.2)
+        algo_color = colors[algo]
+        ax1.plot(subset[x_col], subset['MinimumIndividualDistance_mean'], label=algo, linestyle='--', alpha=0.7, color=algo_color)
+        ax1.fill_between(subset[x_col].astype(int), subset['MinimumIndividualDistance_mean'].astype(float), alpha=0.2, color=algo_color)
 
     for algo in algorithms:
         subset = df[df["Algorithm"] == algo]
-        ax2.plot(subset[x_col], subset['DistanceToOptimum_mean'], linewidth=2, alpha=0.9)
+        algo_color = colors[algo]
+        ax2.plot(subset[x_col], subset['DistanceToOptimum_mean'], linewidth=2, alpha=0.9, color=algo_color)
 
     ax1.set_xlabel("Function Evaluations")
     ax1.set_ylabel("Mean Minimum Individual Distance")
